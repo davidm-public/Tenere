@@ -24,6 +24,8 @@ void setup() {
       }
       
       public void onUIReady(LXStudio lx, LXStudio.UI ui) {
+        final PImage LOGO = loadImage("tenere.png");
+        
         ui.preview
           .setRadius(80*FEET)
           .setPhi(-PI/6);
@@ -31,6 +33,30 @@ void setup() {
         ui.preview.addComponent(new UI3dComponent() {
           @Override
           protected void onDraw(heronarts.p3lx.ui.UI ui, PGraphics pg) {
+
+            // Logo
+            float logoRadius = 4*FEET;
+            
+            pg.translate(0, -Tree.LIMB_HEIGHT + LOGO.height/2, -logoRadius+4);
+            pg.stroke(#222222);
+            pg.fill(#000000);
+            pg.box(LOGO.width, LOGO.height, 3);
+            pg.translate(0, Tree.LIMB_HEIGHT - LOGO.height/2, logoRadius-4);
+            
+            pg.noFill();
+            pg.noStroke();
+            pg.beginShape();
+            pg.texture(LOGO);
+            pg.textureMode(NORMAL);
+            pg.tint(0x99ffffff);
+            pg.vertex(-LOGO.width/2, -Tree.LIMB_HEIGHT + LOGO.height, -logoRadius, 0, 0);
+            pg.vertex(LOGO.width/2, -Tree.LIMB_HEIGHT + LOGO.height, -logoRadius, 1, 0);
+            pg.vertex(LOGO.width/2, -Tree.LIMB_HEIGHT, -logoRadius, 1, 1);
+            pg.vertex(-LOGO.width/2, -Tree.LIMB_HEIGHT, -logoRadius, 0, 1);
+            pg.endShape(CLOSE);
+            
+
+            
             // MAJOR IMPROVEMENTS NEEDED HERE!
             // Quick hackup to draw a tree trunk.
             // Let's implement some shaders and have a nice simulation.
@@ -39,6 +65,9 @@ void setup() {
             pg.translate(0, -Tree.LIMB_HEIGHT/2, 0);
             pg.box(Tree.TRUNK_DIAMETER, Tree.LIMB_HEIGHT, Tree.TRUNK_DIAMETER);
             pg.translate(0, Tree.LIMB_HEIGHT/2, 0);
+            
+
+            
           }
         });
       }
