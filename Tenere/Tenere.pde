@@ -37,11 +37,11 @@ void setup() {
             // Logo
             float logoRadius = 4*FEET;
             
-            pg.translate(0, -Tree.LIMB_HEIGHT + LOGO.height/2, -logoRadius+4);
-            pg.stroke(#222222);
+            pg.translate(0, -Tree.LIMB_HEIGHT + LOGO.height/2, -logoRadius+10);
+            pg.stroke(#191919);
             pg.fill(#000000);
-            pg.box(LOGO.width, LOGO.height, 3);
-            pg.translate(0, Tree.LIMB_HEIGHT - LOGO.height/2, logoRadius-4);
+            pg.box(LOGO.width + 18, LOGO.height + 18, 9);
+            pg.translate(0, Tree.LIMB_HEIGHT - LOGO.height/2, logoRadius-10);
             
             pg.noFill();
             pg.noStroke();
