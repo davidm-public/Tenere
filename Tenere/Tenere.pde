@@ -19,6 +19,7 @@ void setup() {
   try {
     lx = new LXStudio(this, tree) {
       public void initialize(LXStudio lx, LXStudio.UI ui) {
+        lx.registerEffect(BlurEffect.class);
         lx.registerEffect(DesaturationEffect.class);
         // TODO: the UDP output instantiation will go in here!
       }
