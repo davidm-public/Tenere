@@ -4,3 +4,5 @@ This is the animation engine and development environment for the Tree of Ténér
 To get started, grab the latest version of Processing 3 at:  https://processing.org/download/
 
 Then, simply clone or download the repo and open the project in Processing. Enjoy!
+
+![Tenere](assets/screenshot.png)
