@@ -7,21 +7,28 @@
 // Helpful global constants
 final static float INCHES = 1;
 final static float FEET = 12*INCHES;
-
+final static int _width = 1200;
+final static int _height = 960;
 // Our engine and our model
 LXStudio lx;
 LXModel tree;
+
+PApplet applet = Tenere.this;
+
+
+
 
 // Processing's main invocation, build our model and set up LX
 void setup() {
   size(1200, 960, P3D);
   tree = buildTree();
   try {
-    lx = new LXStudio(this, tree) {
+    lx = new LXStudio(this, tree, false) {
       public void initialize(LXStudio lx, LXStudio.UI ui) {
         lx.registerEffect(BlurEffect.class);
         lx.registerEffect(DesaturationEffect.class);
         // TODO: the UDP output instantiation will go in here!
+
       }
       
       public void onUIReady(LXStudio lx, LXStudio.UI ui) {
@@ -76,6 +83,7 @@ void setup() {
   } catch (Exception x) {
     x.printStackTrace();
   }
+
 }
 
 void draw() {
