@@ -14,7 +14,7 @@ import processing.opengl.PGraphics2D;
       intensity = 1.0f;
       px = 1*200/3;
       py = 0;
-      radius = 25;
+      radius = 40;
       r = 0.0f;
       g = 0.3f;
       b = 1.0f;
@@ -31,7 +31,7 @@ import processing.opengl.PGraphics2D;
       intensity = 1.0f;
       px = 2*200/3f;
       py = 150;
-      radius = 20;
+      radius = 30;
       r = 1.0f;
       g = 0.0f;
       b = 0.3f;
@@ -44,7 +44,7 @@ import processing.opengl.PGraphics2D;
       // add impulse: density 
       px = 1*200/3f;
       py = 200-2*200/3f;
-      radius = 15.5f;
+      radius = 25.0f;
       r = g = b = 64/255f;
       intensity = 1.0f;
       fluid.addDensity(px, py, radius, r, g, b, intensity, 3);
@@ -76,6 +76,7 @@ public class Turbulence extends LXPattern {
 
   int viewport_w = 200;
   int viewport_h = 200;
+  final int SIZE_OF_FLUID = viewport_h*viewport_w;
   int fluidgrid_scale = 1;
   
   DwPixelFlow context; 
@@ -83,12 +84,15 @@ public class Turbulence extends LXPattern {
   //ObstaclePainter obstacle_painter;
   PGraphics2D pg_fluid;   // render targets
   PGraphics2D pg_obstacles;   //texture-buffer, for adding obstacles
+  PGraphics2D pg_fluid2; //extra buffer for debugging 
   // some state variables for the GUI/display
   int     BACKGROUND_COLOR           = 0;
   boolean UPDATE_FLUID               = true;
   boolean DISPLAY_FLUID_TEXTURES     = true;
   boolean DISPLAY_FLUID_VECTORS      = false;
   int     DISPLAY_fluid_texture_mode = 0;
+
+  int[] tempColors = new int[SIZE_OF_FLUID];
 
   public final CompoundParameter size =
     new CompoundParameter("Size", 4*FEET, 28*FEET)
@@ -186,32 +190,46 @@ public class Turbulence extends LXPattern {
     pg_fluid.background(BACKGROUND_COLOR);
     pg_fluid.endDraw();
     // render fluid stuff
-    pg_fluid.loadPixels();
+    //pg_fluid.loadPixels();
     //println("pg_fluid pixels loaded: " + pg_fluid.loaded);
     if(DISPLAY_FLUID_TEXTURES){
        //render: density (0), temperature (1), pressure (2), velocity (3)
       fluid.renderFluidTextures(pg_fluid, DISPLAY_fluid_texture_mode);
 
     }
-    pg_fluid.updatePixels();
+    
       //println("fluid pixels loaded: " + fluid.loaded);
       // render: velocity vector field
-     fluid.renderFluidVectors(pg_fluid, 10);
+    // fluid.renderFluidVectors(pg_fluid, 10);
     
     // display
-   image(pg_fluid, 200, 0);
+
+      image(pg_fluid, 200, 0);
    // image(pg_obstacles, 0, 0);
-   // obstacle_painter.displayBrush(this.g);
-    // info
-   // String txt_fps = String.format(getClass().getName()+ "   [size %d/%d]   [frame %d]   [fps %6.2f]", fluid.fluid_w, fluid.fluid_h, fluid.simulation_step, frameRate);
-   // surface.setTitle(txt_fps);
+   //   pg_fluid.loadPixels();
+
+     pg_fluid.loadPixels();
+     for (int x=0; x<pg_fluid.width; x++){
+      for (int y=0; y<pg_fluid.height; y++){
+        int location = x + y*200; 
+        tempColors[location]=pg_fluid.pixels[location];
+       }
+     }
+     pg_fluid.updatePixels();
+
 
     for (LXPoint p : model.points) {
-      int i = p.index;
-      //println(i);
-      //pg_fluid.loadPixels();
-    //  colors[p.index] = pg_fluid.get(i,i+1);
-      //pg_fluid.updatePixels();
+      float positionX = abs((p.x - model.xMin)/(model.xMax - model.xMin));
+      float positionY = abs((p.y - model.yMin)/(model.yMax - model.yMin));
+      int fluidPixelX= floor(positionX*pg_fluid.width);  //gets analagous pixel in the fluid data array 
+      int fluidPixelY= floor(positionY*pg_fluid.height);  
+      //println("fluidpixelX: "+fluidPixelX + "fluidpixelY: " + fluidPixelY);
+      // int r = (tempColors[i] >> 16) & OxFF;
+      // int g = (tempColors[i] >> 8) & OxFF;
+      // int b = tempColors[i] & OxFF;
+
+     colors[p.index] = tempColors[fluidPixelX + fluidPixelY*(pg_fluid.width-1)];
+  
     }
   }
 }
