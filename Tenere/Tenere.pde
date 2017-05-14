@@ -28,7 +28,7 @@ void setup() {
         lx.registerEffect(BlurEffect.class);
         lx.registerEffect(DesaturationEffect.class);
         // TODO: the UDP output instantiation will go in here!
-
+      //  lx.flags.showFramerate=true;
       }
       
       public void onUIReady(LXStudio lx, LXStudio.UI ui) {
